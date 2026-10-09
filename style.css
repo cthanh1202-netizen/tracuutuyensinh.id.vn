@@ -1,89 +1,54 @@
 
-/* CUTOFF - BẢNG ĐIỂM CHUẨN */
-
+/* FIX BẢNG ĐIỂM CHUẨN TRÊN ĐIỆN THOẠI */
 #cutoffResult {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
 }
 
 #cutoffResult .cutoff-table {
-    width: max-content;
-    min-width: 620px;
-    border-collapse: collapse;
-    margin-top: 12px;
-    table-layout: auto;
-    border: 1px solid var(--line);
+  width: max-content;
+  min-width: 720px;
+  table-layout: auto;
+  border-collapse: collapse;
 }
 
 #cutoffResult .cutoff-table th,
 #cutoffResult .cutoff-table td {
-    border-right: 1px solid var(--line);
-    text-align: left;
-    white-space: nowrap;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  white-space: nowrap;
+  line-height: 1.5;
+  vertical-align: middle;
 }
 
-#cutoffResult .cutoff-table th {
-    padding: 9px 12px;
-    font-size: 11px;
-    color: var(--muted);
-    background: var(--soft);
-    border-bottom: 1px solid var(--line);
-}
-
-#cutoffResult .cutoff-table th:first-child,
-#cutoffResult .cutoff-table td:first-child {
-    width: 50px;
-    min-width: 50px;
-}
-
+/* Tên ngành có đủ không gian */
 #cutoffResult .cutoff-table th:nth-child(2),
 #cutoffResult .cutoff-table td:nth-child(2) {
-    min-width: 240px;
+  min-width: 240px;
 }
 
+/* Tổ hợp xét tuyển */
 #cutoffResult .cutoff-table th:nth-child(3),
 #cutoffResult .cutoff-table td:nth-child(3) {
-    min-width: 190px;
+  min-width: 180px;
 }
 
-#cutoffResult .cutoff-table th:nth-child(4),
-#cutoffResult .cutoff-table td:nth-child(4) {
-    min-width: 90px;
-}
-
-#cutoffResult .cutoff-table td {
-    padding: 10px 12px;
-    border-top: 1px solid var(--line);
-    vertical-align: middle;
-    font-size: 13px;
-}
-
-#cutoffResult .cutoff-table td:nth-child(2) {
-    font-weight: 700;
-}
-
+/* Điểm chuẩn */
+#cutoffResult .cutoff-table th:last-child,
 #cutoffResult .cutoff-table td:last-child {
-    font-weight: 900;
-    color: var(--primary);
+  min-width: 100px;
 }
 
-#cutoffResult .combo {
-    color: var(--muted);
-    font-size: 11px;
+/* Tránh chữ và bảng làm rộng toàn bộ trang */
+body {
+  overflow-wrap: break-word;
 }
 
-#cutoffResult .rank {
-    display: inline-grid;
-    place-items: center;
-    width: 21px;
-    height: 21px;
-    border-radius: 6px;
-    background: var(--soft);
-    color: var(--primary);
-    font-size: 10px;
+#cutoffResult {
+  overscroll-behavior-x: contain;
 }
