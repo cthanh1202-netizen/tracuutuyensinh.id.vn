@@ -1,59 +1,166 @@
 
-/* Bảng điểm chuẩn */
-#cutoffResult table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
+/* =========================
+   CUTOFF - BẢNG ĐIỂM CHUẨN
+   Giữ màu sắc theo giao diện hiện tại
+========================= */
+
+.cutoff-table {
+    width: 100%;
+    min-width: 0;
+    margin-top: 12px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
 }
 
-#cutoffResult th,
-#cutoffResult td {
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  padding: 10px 8px;
-  vertical-align: middle;
-  overflow-wrap: anywhere;
-  word-break: normal;
+.cutoff-table th,
+.cutoff-table td {
+    box-sizing: border-box;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 8px;
+    vertical-align: middle;
+    text-align: left;
+    line-height: 1.5;
+
+    /* Chữ nằm gọn trong ô, không tràn sang cột khác */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
-/* Cột STT: không xuống dòng */
-#cutoffResult th:first-child,
-#cutoffResult td:first-child {
-  width: 58px;
-  min-width: 58px;
-  white-space: nowrap;
-  overflow-wrap: normal;
-  word-break: keep-all;
-  text-align: center;
+.cutoff-table th {
+    background: var(--soft);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
 }
 
-/* Nội dung dài nằm trong ô của nó */
-#cutoffResult td {
-  overflow: hidden;
+.cutoff-table td {
+    font-size: 13px;
 }
 
-/* Máy tính: hiện STT */
-@media (min-width: 769px) {
-  #cutoffResult th:first-child,
-  #cutoffResult td:first-child {
-    display: table-cell;
-  }
+/* Cột STT trên máy tính */
+.cutoff-table th:nth-child(1),
+.cutoff-table td:nth-child(1) {
+    width: 52px;
+    text-align: center;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
 }
 
-/* Điện thoại: ẩn STT */
-@media (max-width: 768px) {
-  #cutoffResult th:first-child,
-  #cutoffResult td:first-child {
-    display: none;
-  }
+/* Cột tên ngành */
+.cutoff-table th:nth-child(2),
+.cutoff-table td:nth-child(2) {
+    width: 42%;
+}
 
-  #cutoffResult table {
-    min-width: 600px;
-  }
+/* Cột tổ hợp */
+.cutoff-table th:nth-child(3),
+.cutoff-table td:nth-child(3) {
+    width: 32%;
+}
 
-  #cutoffResult {
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+.cutoff-table .combo {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* Cột điểm */
+.cutoff-table th:nth-child(4),
+.cutoff-table td:nth-child(4) {
+    width: 80px;
+    text-align: center;
+    overflow-wrap: normal;
+    word-break: keep-all;
+}
+
+.cutoff-table td:nth-child(2) {
+    font-weight: 700;
+}
+
+.cutoff-table td:last-child {
+    font-weight: 900;
+    color: var(--primary);
+}
+
+/* Huy hiệu STT */
+.cutoff-table .rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: var(--soft);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+    .cutoff-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    /* Ẩn STT trên điện thoại */
+    .cutoff-table th:first-child,
+    .cutoff-table td:first-child {
+        display: none;
+    }
+
+    /* Chia lại độ rộng cho 3 cột còn lại */
+    .cutoff-table th:nth-child(2),
+    .cutoff-table td:nth-child(2) {
+        width: 44%;
+    }
+
+    .cutoff-table th:nth-child(3),
+    .cutoff-table td:nth-child(3) {
+        width: 32%;
+    }
+
+    .cutoff-table th:nth-child(4),
+    .cutoff-table td:nth-child(4) {
+        width: 24%;
+    }
+
+    .cutoff-table th,
+    .cutoff-table td {
+        padding: 9px 6px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .cutoff-table th {
+        font-size: 11px;
+    }
+
+    .cutoff-table .combo {
+        font-size: 11px;
+    }
+}
+
+/* Màn hình rất nhỏ */
+@media (max-width: 360px) {
+    .cutoff-table th,
+    .cutoff-table td {
+        padding: 8px 4px;
+        font-size: 11px;
+    }
+
+    .cutoff-table .combo {
+        font-size: 10px;
+    }
 }
