@@ -1,54 +1,36 @@
 
-/* FIX BẢNG ĐIỂM CHUẨN TRÊN ĐIỆN THOẠI */
+/* Bảng điểm chuẩn: giữ cột độc lập trên điện thoại */
 #cutoffResult {
-  display: block;
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x pan-y;
 }
 
-#cutoffResult .cutoff-table {
-  width: max-content;
-  min-width: 720px;
-  table-layout: auto;
+#cutoffResult table {
+  width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
-#cutoffResult .cutoff-table th,
-#cutoffResult .cutoff-table td {
+/* Mỗi ô có chiều rộng riêng, không đẩy cột khác */
+#cutoffResult th,
+#cutoffResult td {
   box-sizing: border-box;
-  padding: 12px 14px;
+  padding: 10px 8px;
+  vertical-align: top;
+  overflow-wrap: normal;
+}
+
+/* Chữ dài được vuốt bên trong ô */
+#cutoffResult td {
+  overflow-x: auto;
   white-space: nowrap;
-  line-height: 1.5;
-  vertical-align: middle;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Tên ngành có đủ không gian */
-#cutoffResult .cutoff-table th:nth-child(2),
-#cutoffResult .cutoff-table td:nth-child(2) {
-  min-width: 240px;
-}
-
-/* Tổ hợp xét tuyển */
-#cutoffResult .cutoff-table th:nth-child(3),
-#cutoffResult .cutoff-table td:nth-child(3) {
-  min-width: 180px;
-}
-
-/* Điểm chuẩn */
-#cutoffResult .cutoff-table th:last-child,
-#cutoffResult .cutoff-table td:last-child {
-  min-width: 100px;
-}
-
-/* Tránh chữ và bảng làm rộng toàn bộ trang */
-body {
-  overflow-wrap: break-word;
-}
-
-#cutoffResult {
-  overscroll-behavior-x: contain;
+/* Tiêu đề cột vẫn hiển thị rõ */
+#cutoffResult th {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
