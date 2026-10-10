@@ -684,3 +684,63 @@ table input {
         width: 52px;
     }
 }
+
+/* Gợi ý trường nằm ngay dưới ô tìm kiếm */
+.school-search-box {
+    position: relative;
+    min-width: 0;
+}
+
+.school-suggestions {
+    position: absolute;
+    top: calc(100% - 36px);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: 240px;
+    overflow-y: auto;
+    background: #202338;
+    border: 1px solid #393e59;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .35);
+}
+
+.school-suggestions[hidden] {
+    display: none;
+}
+
+.school-suggestion {
+    display: block;
+    width: 100%;
+    padding: 13px 15px;
+    border: 0;
+    border-bottom: 1px solid #343850;
+    background: transparent;
+    color: #f4f5ff;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+}
+
+.school-suggestion:last-child {
+    border-bottom: 0;
+}
+
+.school-suggestion:hover,
+.school-suggestion:focus {
+    background: #343052;
+    outline: none;
+}
+
+.school-suggestion small {
+    display: block;
+    margin-top: 4px;
+    color: #a5a9c0;
+    font-size: 12px;
+}
+
+.school-no-result {
+    padding: 13px 15px;
+    color: #a5a9c0;
+    font-size: 13px;
+}
