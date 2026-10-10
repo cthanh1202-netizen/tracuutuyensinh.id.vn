@@ -1,73 +1,69 @@
-<!doctype html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>TRACUUTUYENSINH — Tra cứu tuyển sinh</title>
-    <link rel="stylesheet" href="style.css">
-</head>
 
-<body>
-<main class="app">
-<div class="wrap">
-
-<header class="brand">
-    <div class="logo">TRACUUTUYENSINH</div>
-
-    <div class="actions">
-        <button class="theme" id="theme" aria-label="Đổi giao diện">
-            <span></span>
-        </button>
-    </div>
-</header>
-
-<!-- COUNTDOWN -->
-<section class="hero" id="countdownCard" role="button" tabindex="0" aria-expanded="false">
-
-    <h1>Đếm ngược kỳ thi THPTQG 2027</h1>
-   
 <div class="quote-slider" id="quoteSlider">
   <span class="quote-label">DAILY INSPIRATION</span>
-  <p class="quote-text" id="quoteText">
-    “It always seems impossible until it's done.”
-  </p>
-  <span class="quote-author" id="quoteAuthor">
-    — Nelson Mandela
-  </span>
+
+  <p class="quote-text" id="quoteText"></p>
+  <span class="quote-author" id="quoteAuthor"></span>
+
+  <div class="quote-dots" id="quoteDots"></div>
 </div>
 
 <style>
 .quote-slider {
   width: 100%;
-  text-align: center;
   padding: 12px 16px;
   box-sizing: border-box;
+  text-align: center;
   font-family: inherit;
 }
 
 .quote-label {
   display: block;
+  color: #94a3b8;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 3px;
-  color: #64748b;
   margin-bottom: 10px;
 }
 
 .quote-text {
+  color: inherit;
   font-size: clamp(14px, 2vw, 18px);
   font-weight: 600;
   line-height: 1.7;
-  color: inherit;
-  margin: 0 auto 5px;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  margin: 0 auto 6px;
+  transition: opacity .4s ease, transform .4s ease;
 }
 
 .quote-author {
   display: block;
-  font-size: 12px;
   color: #94a3b8;
-  transition: opacity 0.4s ease;
+  font-size: 12px;
+  transition: opacity .4s ease;
+}
+
+.quote-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.quote-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 99px;
+  background: #cbd5e1;
+  cursor: pointer;
+  transition: width .3s ease, background .3s ease;
+}
+
+.quote-dot.active {
+  width: 20px;
+  background: #64748b;
 }
 
 .quote-slider.fade-out .quote-text,
@@ -77,8 +73,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .quote-text,
-  .quote-author {
+  .quote-text, .quote-author, .quote-dot {
     transition: none;
   }
 }
@@ -86,6 +81,14 @@
 
 <script>
 (() => {
+  const slider = document.getElementById("quoteSlider");
+  if (!slider || slider.dataset.initialized) return;
+  slider.dataset.initialized = "true";
+
+  const text = slider.querySelector("#quoteText");
+  const author = slider.querySelector("#quoteAuthor");
+  const dots = slider.querySelector("#quoteDots");
+
   const quotes = [
     {
       text: "It always seems impossible until it's done.",
@@ -132,497 +135,60 @@
       author: "Steve Jobs"
     },
     {
-      text: "Hãy kiên trì theo đuổi mục tiêu, thành quả sẽ đến theo thời gian.",
-      author: "Thông điệp truyền cảm hứng"
+      text: "Có chí thì nên.",
+      author: "Tục ngữ Việt Nam"
     }
   ];
 
-  const slider = document.getElementById("quoteSlider");
-  const text = document.getElementById("quoteText");
-  const author = document.getElementById("quoteAuthor");
-
-  if (!slider || !text || !author) return;
-
   let index = 0;
+  let timer;
 
-  // Chọn câu mở đầu ngẫu nhiên
-  index = Math.floor(Math.random() * quotes.length);
-  text.textContent = "“" + quotes[index].text + "”";
-  author.textContent = "— " + quotes[index].author;
+  // Tạo thanh chỉ báo, bấm vào để chuyển câu
+  quotes.forEach((quote, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "quote-dot";
+    dot.setAttribute("aria-label", "Xem câu nói " + (i + 1));
 
-  setInterval(() => {
-    slider.classList.add("fade-out");
+    dot.addEventListener("click", () => {
+      showQuote(i);
+      restartTimer();
+    });
 
-    setTimeout(() => {
-      index = (index + 1) % quotes.length;
+    dots.appendChild(dot);
+  });
 
+  function showQuote(nextIndex, animate = true) {
+    index = nextIndex;
+
+    const update = () => {
       text.textContent = "“" + quotes[index].text + "”";
       author.textContent = "— " + quotes[index].author;
 
+      [...dots.children].forEach((dot, i) => {
+        dot.classList.toggle("active", i === index);
+        dot.setAttribute("aria-current", i === index ? "true" : "false");
+      });
+
       slider.classList.remove("fade-out");
-    }, 400);
-  }, 5000);
+    };
+
+    if (animate) {
+      slider.classList.add("fade-out");
+      setTimeout(update, 400);
+    } else {
+      update();
+    }
+  }
+
+  function restartTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => {
+      showQuote((index + 1) % quotes.length);
+    }, 5000);
+  }
+
+  showQuote(0, false);
+  restartTimer();
 })();
 </script>
-
-
-    <div class="countdown">
-        <div class="unit">
-            <div class="num" id="days">--</div>
-            <div class="lab">Ngày</div>
-        </div>
-
-        <div class="unit">
-            <div class="num" id="hours">--</div>
-            <div class="lab">Giờ</div>
-        </div>
-
-        <div class="unit">
-            <div class="num" id="minutes">--</div>
-            <div class="lab">Phút</div>
-        </div>
-
-        <div class="unit">
-            <div class="num" id="seconds">--</div>
-            <div class="lab">Giây</div>
-        </div>
-    </div>
-
-    <div class="hint">⌄ Bấm vào đây để xem lịch thi</div>
-</section>
-
-
-<!-- LỊCH THI -->
-<section class="schedule" id="schedule">
-
-    <h2>📚 Lịch thi dự kiến</h2>
-
-    <div class="row">
-        <div class="subject">Ngữ văn</div>
-        <div><span class="pill">11/06/2027</span></div>
-        <div>07:30</div>
-        <div>120 phút</div>
-    </div>
-
-    <div class="row">
-        <div class="subject">Toán</div>
-        <div><span class="pill">11/06/2027</span></div>
-        <div>14:20</div>
-        <div>90 phút</div>
-    </div>
-
-    <div class="row">
-        <div class="subject">Tự chọn 1</div>
-        <div><span class="pill">12/06/2027</span></div>
-        <div>07:30</div>
-        <div>50 phút</div>
-    </div>
-
-    <div class="row">
-        <div class="subject">Tự chọn 2</div>
-        <div><span class="pill">12/06/2027</span></div>
-        <div>08:35</div>
-        <div>50 phút</div>
-    </div>
-
-    <button class="close" id="close">
-        Thu gọn lịch thi
-    </button>
-
-</section>
-
-
-<!-- MENU -->
-<nav class="menu">
-
-    <div class="card" data-tool="cutoff">
-        <div class="icon">🎯</div>
-        <b>Điểm chuẩn</b>
-        <span>Tra cứu điểm chuẩn các trường</span>
-    </div>
-
-    <div class="card" data-tool="score">
-        <div class="icon">🧮</div>
-        <b>Tính điểm</b>
-        <span>Tính điểm xét tuyển nhanh</span>
-    </div>
-
-    <div class="card" data-tool="major">
-        <div class="icon">🧭</div>
-        <b>Chọn ngành</b>
-        <span>Gợi ý ngành phù hợp</span>
-    </div>
-
-    <div class="card" data-tool="study">
-        <div class="icon">📖</div>
-        <b>Ôn thi</b>
-        <span>Tài liệu và công cụ học tập</span>
-    </div>
-
-</nav>
-
-
-<!-- TÍNH ĐIỂM -->
-<section class="tools" id="scoreTool">
-
-    <h2>🧮 Tính điểm xét tuyển</h2>
-
-    <div class="scoretabs">
-        <button class="scoretab active" data-mode="thpt">
-            1️⃣ THPT
-        </button>
-
-        <button class="scoretab" data-mode="hocba">
-            2️⃣ Học bạ
-        </button>
-    </div>
-
-
-    <!-- THPT -->
-    <div id="thptMode">
-
-        <div class="toolbox">
-            <label>Khối xét tuyển</label>
-
-            <select id="block">
-                <option value="A00">A00 — Toán, Lý, Hóa</option>
-                <option value="A01">A01 — Toán, Lý, Anh</option>
-                <option value="D01">D01 — Toán, Văn, Anh</option>
-                <option value="C01">C01 — Toán, Văn, Lý</option>
-                <option value="B00">B00 — Toán, Hóa, Sinh</option>
-            </select>
-        </div>
-
-
-        <div class="toolgrid">
-
-            <div class="toolbox">
-                <label>Toán</label>
-                <input id="s1" type="number" min="0" max="10" step=".01">
-            </div>
-
-            <div class="toolbox">
-                <label>Môn 2</label>
-                <input id="s2" type="number" min="0" max="10" step=".01">
-            </div>
-
-            <div class="toolbox">
-                <label>Môn 3</label>
-                <input id="s3" type="number" min="0" max="10" step=".01">
-            </div>
-
-            <div class="toolbox">
-                <label>Khu vực</label>
-
-                <select id="region">
-                    <option value="0">Không cộng</option>
-                    <option value="0.25">KV1</option>
-                    <option value="0.5">KV2-NT</option>
-                    <option value="0.25">KV2</option>
-                </select>
-            </div>
-
-            <div class="toolbox">
-                <label>Điểm ưu tiên / đối tượng</label>
-                <input id="bonus" type="number" min="0" step=".01" value="0">
-            </div>
-
-        </div>
-
-        <button class="toolbtn" id="calc">
-            Tính điểm THPT
-        </button>
-
-        <div class="result" id="scoreResult">
-            Nhập điểm 3 môn để xem tổng.
-        </div>
-
-    </div>
-
-
-    <!-- HỌC BẠ -->
-    <div id="hocbaMode" style="display:none">
-
-        <div class="toolbox">
-            <label>Phương thức xét học bạ</label>
-
-            <select id="hbMethod">
-                <option value="3y">Xét học bạ 3 năm</option>
-                <option value="6hk">Xét học bạ 6 học kỳ</option>
-                <option value="12">Xét học bạ cả năm lớp 12</option>
-                <option value="5hk">Xét học bạ 5 học kỳ</option>
-                <option value="3hk">Xét học bạ 3 học kỳ</option>
-            </select>
-        </div>
-
-        <div class="toolbox">
-            <label>Khối xét tuyển</label>
-
-            <select id="hbCombo">
-                <option value="A00">A00 — Toán, Lý, Hóa</option>
-                <option value="A01">A01 — Toán, Lý, Anh</option>
-                <option value="D01">D01 — Toán, Văn, Anh</option>
-                <option value="C01">C01 — Toán, Văn, Lý</option>
-                <option value="B00">B00 — Toán, Hóa, Sinh</option>
-            </select>
-        </div>
-
-
-        <div class="toolgrid">
-
-            <div class="toolbox">
-                <label>Khu vực</label>
-
-                <select id="hbRegion">
-                    <option value="0">Không cộng</option>
-                    <option value="0.25">KV1</option>
-                    <option value="0.5">KV2-NT</option>
-                    <option value="0.25">KV2</option>
-                </select>
-            </div>
-
-            <div class="toolbox">
-                <label>Điểm ưu tiên / đối tượng</label>
-                <input id="hbBonus" type="number" min="0" step=".01" value="0">
-            </div>
-
-            <div class="toolbox">
-                <label>Môn nhân hệ số 2</label>
-
-                <select id="hbDouble">
-                    <option value="">Không nhân</option>
-                    <option value="Toan">Toán ×2</option>
-                    <option value="Ly">Lý ×2</option>
-                    <option value="Hoa">Hóa ×2</option>
-                    <option value="Van">Văn ×2</option>
-                    <option value="Anh">Anh ×2</option>
-                </select>
-            </div>
-
-        </div>
-
-
-        <div class="toolbox table-box">
-
-            <label>Bảng điểm học bạ theo môn</label>
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Môn</th>
-                        <th>Lớp 10</th>
-                        <th>Lớp 11</th>
-                        <th>Lớp 12</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>Toán</td>
-                        <td><input id="hbToan10" type="number"></td>
-                        <td><input id="hbToan11" type="number"></td>
-                        <td><input id="hbToan12" type="number"></td>
-                    </tr>
-
-                    <tr>
-                        <td>Văn</td>
-                        <td><input id="hbVan10" type="number"></td>
-                        <td><input id="hbVan11" type="number"></td>
-                        <td><input id="hbVan12" type="number"></td>
-                    </tr>
-
-                    <tr>
-                        <td>Anh</td>
-                        <td><input id="hbAnh10" type="number"></td>
-                        <td><input id="hbAnh11" type="number"></td>
-                        <td><input id="hbAnh12" type="number"></td>
-                    </tr>
-
-                    <tr>
-                        <td>Lý</td>
-                        <td><input id="hbLy10" type="number"></td>
-                        <td><input id="hbLy11" type="number"></td>
-                        <td><input id="hbLy12" type="number"></td>
-                    </tr>
-
-                    <tr>
-                        <td>Hóa</td>
-                        <td><input id="hbHoa10" type="number"></td>
-                        <td><input id="hbHoa11" type="number"></td>
-                        <td><input id="hbHoa12" type="number"></td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <button class="toolbtn" id="calcHb">
-            Xem kết quả học bạ
-        </button>
-
-        <div class="result" id="hbResult">
-            Chọn phương thức, khối và nhập điểm các môn để xem kết quả.
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ĐIỂM CHUẨN -->
-<section class="tools" id="cutoffTool">
-
-    <h2>🎯 Tra cứu điểm chuẩn</h2>
-
-    
-<div class="toolbox">
-  
-<div class="toolbox school-search-box">
-    <label for="schoolSearch">Tìm trường đại học</label>
-    <input
-        id="schoolSearch"
-        type="search"
-        placeholder="Nhập tên trường cần tìm..."
-        autocomplete="off"
-        aria-autocomplete="list"
-        aria-controls="schoolSuggestions"
-    >
-    <div id="schoolSuggestions" class="school-suggestions" hidden></div>
-    <input id="school" type="hidden" value="vnu">
-    <p class="school-hint" id="schoolHint">
-        Đang chọn: ĐHQG Hà Nội
-    </p>
-</div>
-
-
-
-    <div class="toolbox">
-
-        <label>Tìm ngành</label>
-
-        <input
-            id="cutoffSearch"
-            type="search"
-            placeholder="Nhập tên ngành, ví dụ: FinTech, Marketing..."
-        >
-
-    </div>
-
-
-    <button class="toolbtn" id="lookupCutoff">
-        Xem tất cả ngành
-    </button>
-
-
-    <div class="result" id="cutoffResult">
-        Chọn trường để xem toàn bộ ngành.
-    </div>
-
-</section>
-
-
-<!-- CHỌN NGÀNH -->
-<section class="tools" id="majorTool">
-
-    <h2>🧭 Gợi ý ngành phù hợp</h2>
-
-    <div class="toolgrid">
-
-        <div class="toolbox">
-            <label>Môn bạn mạnh</label>
-
-            <select id="strong">
-                <option>Toán</option>
-                <option>Tiếng Anh</option>
-                <option>Vật lý</option>
-                <option>Hóa học</option>
-                <option>Ngữ văn</option>
-            </select>
-        </div>
-
-
-        <div class="toolbox">
-            <label>Sở thích</label>
-
-            <select id="interest">
-                <option>Công nghệ & máy tính</option>
-                <option>Kinh doanh & tài chính</option>
-                <option>Kỹ thuật</option>
-                <option>Truyền thông</option>
-            </select>
-        </div>
-
-    </div>
-
-
-    <button class="toolbtn" id="suggest">
-        Gợi ý ngành
-    </button>
-
-    <div class="result" id="majorResult">
-        Chọn thông tin để nhận gợi ý.
-    </div>
-
-</section>
-
-
-<!-- ÔN THI -->
-<section class="tools" id="studyTool">
-
-    <h2>📖 Ôn thi</h2>
-
-    <div class="toolgrid">
-
-        <div class="toolbox">
-            <label>Mục tiêu</label>
-
-            <select>
-                <option>THPTQG 2027</option>
-                <option>HSA</option>
-            </select>
-        </div>
-
-        <div class="toolbox">
-            <label>Môn học</label>
-
-            <select>
-                <option>Toán</option>
-                <option>Ngữ văn</option>
-                <option>Tiếng Anh</option>
-                <option>Tổ hợp tự chọn</option>
-            </select>
-        </div>
-
-    </div>
-
-
-    <div class="result">
-        📚 Khu ôn thi: lộ trình, tài liệu, công cụ luyện tập và theo dõi tiến độ sẽ được bổ sung.
-    </div>
-
-</section>
-
-
-<!-- MESSAGE -->
-<section class="message">
-
-    <b>💬 Nhắn nhủ</b>
-
-    <span>
-        Cố gắng từng ngày, đừng để đến sát ngày thi mới bắt đầu.
-        TRACUUTUYENSINH đồng hành cùng bạn trên hành trình chinh phục kỳ thi!
-    </span>
-
-</section>
-
-</div>
-</main>
-
-<script src="script.js"></script>
-
-</body>
-</html>
