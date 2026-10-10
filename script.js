@@ -568,3 +568,123 @@ if (suggestButton) {
         }
     });
 }
+// DANH NGÔN TRUYỀN CẢM HỨNG
+(() => {
+    const box = document.getElementById("inspiration");
+    const text = document.getElementById("quoteText");
+    const author = document.getElementById("quoteAuthor");
+    const dots = document.getElementById("quoteDots");
+
+    if (!box || !text || !author || !dots) return;
+    if (box.dataset.ready === "true") return;
+    box.dataset.ready = "true";
+
+    const quotes = [
+        {
+            text: "It always seems impossible until it's done.",
+            author: "Nelson Mandela"
+        },
+        {
+            text: "Có công mài sắt, có ngày nên kim.",
+            author: "Tục ngữ Việt Nam"
+        },
+        {
+            text: "The future depends on what you do today.",
+            author: "Mahatma Gandhi"
+        },
+        {
+            text: "Thất bại là mẹ thành công.",
+            author: "Tục ngữ Việt Nam"
+        },
+        {
+            text: "Believe you can and you're halfway there.",
+            author: "Theodore Roosevelt"
+        },
+        {
+            text: "Học, học nữa, học mãi.",
+            author: "Câu nói thường được gán cho Lenin"
+        },
+        {
+            text: "The secret of getting ahead is getting started.",
+            author: "Mark Twain"
+        },
+        {
+            text: "Đường đi khó không khó vì ngăn sông cách núi, mà khó vì lòng người ngại núi e sông.",
+            author: "Nguyễn Bá Học"
+        },
+        {
+            text: "Well done is better than well said.",
+            author: "Benjamin Franklin"
+        },
+        {
+            text: "Có chí thì nên.",
+            author: "Tục ngữ Việt Nam"
+        },
+        {
+            text: "Stay hungry, stay foolish.",
+            author: "Steve Jobs"
+        },
+        {
+            text: "Hành trình vạn dặm bắt đầu từ một bước chân.",
+            author: "Câu nói thường được gắn với Lão Tử"
+        }
+    ];
+
+    let index = 0;
+    let interval;
+    let transition;
+
+    quotes.forEach((quote, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "quote-dot";
+        dot.setAttribute("aria-label", "Xem câu nói số " + (i + 1));
+
+        dot.addEventListener("click", () => {
+            showQuote(i);
+            startTimer();
+        });
+
+        dots.appendChild(dot);
+    });
+
+    function updateDots() {
+        Array.from(dots.children).forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+            dot.setAttribute(
+                "aria-current",
+                i === index ? "true" : "false"
+            );
+        });
+    }
+
+    function showQuote(nextIndex, animated = true) {
+        index = nextIndex;
+        clearTimeout(transition);
+
+        function update() {
+            text.textContent = "“" + quotes[index].text + "”";
+            author.textContent = "— " + quotes[index].author;
+            updateDots();
+            box.classList.remove("changing");
+        }
+
+        if (animated) {
+            box.classList.add("changing");
+            transition = setTimeout(update, 350);
+        } else {
+            update();
+        }
+    }
+
+    function startTimer() {
+        clearInterval(interval);
+
+        interval = setInterval(() => {
+            showQuote((index + 1) % quotes.length);
+        }, 5000);
+    }
+
+    showQuote(0, false);
+    startTimer();
+})();
