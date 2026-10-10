@@ -744,3 +744,53 @@ table input {
     color: #a5a9c0;
     font-size: 13px;
 }
+/* Danh ngôn truyền cảm hứng */
+.inspiration {
+    margin: 12px auto 18px;
+    max-width: 750px;
+    text-align: center;
+}
+
+.quote-text {
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 600;
+    line-height: 1.7;
+    transition: opacity .35s ease, transform .35s ease;
+}
+
+.quote-author {
+    margin-top: 5px;
+    font-size: 12px;
+    opacity: .7;
+    transition: opacity .35s ease;
+}
+
+.inspiration.changing .quote-text,
+.inspiration.changing .quote-author {
+    opacity: 0;
+    transform: translateY(5px);
+}
+
+.quote-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.quote-dot {
+    width: 6px;
+    height: 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: width .3s ease, background .3s ease;
+}
+
+.quote-dot.active {
+    width: 20px;
+    background: #64748b;
+}
