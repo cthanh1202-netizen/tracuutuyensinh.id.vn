@@ -341,26 +341,27 @@
 
     
 <div class="toolbox">
+  
+<div class="toolbox school-search-box">
     <label for="schoolSearch">Tìm trường đại học</label>
     <input
         id="schoolSearch"
         type="search"
-        list="schoolOptions"
-        placeholder="Gõ tên trường để tìm..."
+        placeholder="Nhập tên trường cần tìm..."
         autocomplete="off"
+        aria-autocomplete="list"
+        aria-controls="schoolSuggestions"
     >
-    <datalist id="schoolOptions">
-        <option value="ĐHQG Hà Nội"></option>
-        <option value="ĐH Kinh tế Quốc dân"></option>
-        <option value="ĐH Bách khoa Hà Nội"></option>
-        <option value="ĐH Thương mại"></option>
-        <option value="ĐH Ngoại thương — Cơ sở phía Bắc"></option>
-    </datalist>
+
+    <div id="schoolSuggestions" class="school-suggestions" hidden></div>
+
     <input id="school" type="hidden" value="vnu">
+
     <p class="school-hint" id="schoolHint">
         Đang chọn: ĐHQG Hà Nội
     </p>
 </div>
+
 
 
     <div class="toolbox">
