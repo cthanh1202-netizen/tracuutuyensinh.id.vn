@@ -25,7 +25,146 @@
 <section class="hero" id="countdownCard" role="button" tabindex="0" aria-expanded="false">
 
     <h1>Đếm ngược kỳ thi THPTQG 2027</h1>
-    <p>Chạm vào thời gian để xem các phần thi</p>
+   
+<div class="quote-slider" id="quoteSlider">
+  <span class="quote-label">DAILY INSPIRATION</span>
+  <p class="quote-text" id="quoteText">
+    “It always seems impossible until it's done.”
+  </p>
+  <span class="quote-author" id="quoteAuthor">
+    — Nelson Mandela
+  </span>
+</div>
+
+<style>
+.quote-slider {
+  width: 100%;
+  text-align: center;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.quote-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.quote-text {
+  font-size: clamp(14px, 2vw, 18px);
+  font-weight: 600;
+  line-height: 1.7;
+  color: inherit;
+  margin: 0 auto 5px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.quote-author {
+  display: block;
+  font-size: 12px;
+  color: #94a3b8;
+  transition: opacity 0.4s ease;
+}
+
+.quote-slider.fade-out .quote-text,
+.quote-slider.fade-out .quote-author {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quote-text,
+  .quote-author {
+    transition: none;
+  }
+}
+</style>
+
+<script>
+(() => {
+  const quotes = [
+    {
+      text: "It always seems impossible until it's done.",
+      author: "Nelson Mandela"
+    },
+    {
+      text: "Có công mài sắt, có ngày nên kim.",
+      author: "Tục ngữ Việt Nam"
+    },
+    {
+      text: "The future depends on what you do today.",
+      author: "Mahatma Gandhi"
+    },
+    {
+      text: "Thất bại là mẹ thành công.",
+      author: "Tục ngữ Việt Nam"
+    },
+    {
+      text: "Believe you can and you're halfway there.",
+      author: "Theodore Roosevelt"
+    },
+    {
+      text: "Học, học nữa, học mãi.",
+      author: "Câu nói thường được gán cho Lenin"
+    },
+    {
+      text: "The secret of getting ahead is getting started.",
+      author: "Mark Twain"
+    },
+    {
+      text: "Đường đi khó không khó vì ngăn sông cách núi, mà khó vì lòng người ngại núi e sông.",
+      author: "Nguyễn Bá Học"
+    },
+    {
+      text: "Well done is better than well said.",
+      author: "Benjamin Franklin"
+    },
+    {
+      text: "Không có áp lực, không có kim cương.",
+      author: "Danh ngôn phổ biến"
+    },
+    {
+      text: "Stay hungry, stay foolish.",
+      author: "Steve Jobs"
+    },
+    {
+      text: "Hãy kiên trì theo đuổi mục tiêu, thành quả sẽ đến theo thời gian.",
+      author: "Thông điệp truyền cảm hứng"
+    }
+  ];
+
+  const slider = document.getElementById("quoteSlider");
+  const text = document.getElementById("quoteText");
+  const author = document.getElementById("quoteAuthor");
+
+  if (!slider || !text || !author) return;
+
+  let index = 0;
+
+  // Chọn câu mở đầu ngẫu nhiên
+  index = Math.floor(Math.random() * quotes.length);
+  text.textContent = "“" + quotes[index].text + "”";
+  author.textContent = "— " + quotes[index].author;
+
+  setInterval(() => {
+    slider.classList.add("fade-out");
+
+    setTimeout(() => {
+      index = (index + 1) % quotes.length;
+
+      text.textContent = "“" + quotes[index].text + "”";
+      author.textContent = "— " + quotes[index].author;
+
+      slider.classList.remove("fade-out");
+    }, 400);
+  }, 5000);
+})();
+</script>
+
 
     <div class="countdown">
         <div class="unit">
