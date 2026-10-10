@@ -794,3 +794,45 @@ table input {
     width: 20px;
     background: #64748b;
 }
+
+/* Fix danh ngôn trên điện thoại */
+.inspiration {
+    display: block !important;
+    width: 100%;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 12px auto 18px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.quote-text {
+    display: block !important;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.quote-author {
+    display: block !important;
+    margin-top: 8px;
+}
+
+.quote-dots {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.quote-dot {
+    flex: 0 0 6px;
+    min-width: 6px;
+    min-height: 6px;
+}
+
+.quote-dot.active {
+    flex-basis: 20px;
+}
