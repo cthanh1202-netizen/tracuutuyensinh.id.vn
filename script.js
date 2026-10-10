@@ -1,65 +1,50 @@
+
 /* =========================
    COUNTDOWN
 ========================= */
 
-const target =
-    new Date("2027-06-11T07:30:00+07:00").getTime();
+const target = new Date("2027-06-11T07:30:00+07:00").getTime();
 
 function tick() {
+    let distance = Math.max(0, target - Date.now());
 
-    let distance = Math.max(
-        0,
-        target - Date.now()
-    );
-
-    const daysValue =
-        Math.floor(distance / 86400000);
-
+    const daysValue = Math.floor(distance / 86400000);
     distance %= 86400000;
 
-    const hoursValue =
-        Math.floor(distance / 3600000);
-
+    const hoursValue = Math.floor(distance / 3600000);
     distance %= 3600000;
 
-    const minutesValue =
-        Math.floor(distance / 60000);
+    const minutesValue = Math.floor(distance / 60000);
+    const secondsValue = Math.floor(distance / 1000) % 60;
 
-    const secondsValue =
-        Math.floor(distance / 1000) % 60;
+    const days = document.getElementById("days");
+    const hours = document.getElementById("hours");
+    const minutes = document.getElementById("minutes");
+    const seconds = document.getElementById("seconds");
 
-    document.getElementById("days").textContent =
-        String(daysValue).padStart(2,"0");
-
-    document.getElementById("hours").textContent =
-        String(hoursValue).padStart(2,"0");
-
-    document.getElementById("minutes").textContent =
-        String(minutesValue).padStart(2,"0");
-
-    document.getElementById("seconds").textContent =
-        String(secondsValue).padStart(2,"0");
+    if (days) days.textContent = String(daysValue).padStart(2, "0");
+    if (hours) hours.textContent = String(hoursValue).padStart(2, "0");
+    if (minutes) minutes.textContent = String(minutesValue).padStart(2, "0");
+    if (seconds) seconds.textContent = String(secondsValue).padStart(2, "0");
 }
 
 tick();
-setInterval(tick,1000);
+setInterval(tick, 1000);
 
 
 /* =========================
    DARK / LIGHT MODE
 ========================= */
 
-const theme =
-    document.getElementById("theme");
-
-const savedTheme =
-    localStorage.getItem("theme");
+const theme = document.getElementById("theme");
+const savedTheme = localStorage.getItem("theme");
 
 if (savedTheme === "light") {
     document.body.classList.add("light");
 }
 
 function updateTheme() {
+    if (!theme) return;
 
     theme.classList.toggle(
         "dark",
@@ -69,482 +54,361 @@ function updateTheme() {
 
 updateTheme();
 
-theme.addEventListener("click", () => {
+if (theme) {
+    theme.addEventListener("click", () => {
+        document.body.classList.toggle("light");
 
-    document.body.classList.toggle("light");
+        localStorage.setItem(
+            "theme",
+            document.body.classList.contains("light") ? "light" : "dark"
+        );
 
-    localStorage.setItem(
-        "theme",
-        document.body.classList.contains("light")
-            ? "light"
-            : "dark"
-    );
-
-    updateTheme();
-});
+        updateTheme();
+    });
+}
 
 
 /* =========================
    LỊCH THI
 ========================= */
 
-const countdownCard =
-    document.getElementById("countdownCard");
-
-const schedule =
-    document.getElementById("schedule");
+const countdownCard = document.getElementById("countdownCard");
+const schedule = document.getElementById("schedule");
 
 function toggleSchedule() {
+    if (!schedule || !countdownCard) return;
 
-    const open =
-        schedule.classList.toggle("open");
-
-    countdownCard.setAttribute(
-        "aria-expanded",
-        open
-    );
+    const open = schedule.classList.toggle("open");
+    countdownCard.setAttribute("aria-expanded", String(open));
 }
 
-countdownCard.addEventListener(
-    "click",
-    toggleSchedule
-);
+if (countdownCard) {
+    countdownCard.addEventListener("click", toggleSchedule);
 
-countdownCard.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key === "Enter" ||
-            event.key === " "
-        ) {
-
+    countdownCard.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
             toggleSchedule();
         }
-    }
-);
+    });
+}
 
+const closeSchedule = document.getElementById("close");
 
-document
-    .getElementById("close")
-    .addEventListener("click", event => {
-
+if (closeSchedule) {
+    closeSchedule.addEventListener("click", event => {
         event.stopPropagation();
 
-        schedule.classList.remove("open");
+        if (schedule) schedule.classList.remove("open");
 
-        countdownCard.setAttribute(
-            "aria-expanded",
-            "false"
-        );
+        if (countdownCard) {
+            countdownCard.setAttribute("aria-expanded", "false");
+        }
     });
+}
 
 
 /* =========================
-   MENU
+   MENU CÔNG CỤ
 ========================= */
 
 const toolMap = {
-
     score: "scoreTool",
     cutoff: "cutoffTool",
     major: "majorTool",
     study: "studyTool"
-
 };
 
-document
-    .querySelectorAll(".card")
-    .forEach(card => {
+document.querySelectorAll(".card").forEach(card => {
+    card.addEventListener("click", () => {
+        document.querySelectorAll(".tools").forEach(tool => {
+            tool.classList.remove("open");
+        });
 
-        card.addEventListener("click", () => {
+        const tool = document.getElementById(
+            toolMap[card.dataset.tool]
+        );
 
-            document
-                .querySelectorAll(".tools")
-                .forEach(tool =>
-                    tool.classList.remove("open")
-                );
-
-            const tool =
-                document.getElementById(
-                    toolMap[card.dataset.tool]
-                );
-
+        if (tool) {
             tool.classList.add("open");
-
             tool.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
             });
-        });
+        }
     });
+});
 
 
 /* =========================
    TAB THPT / HỌC BẠ
 ========================= */
 
-document
-    .querySelectorAll(".scoretab")
-    .forEach(tab => {
-
-        tab.addEventListener("click", () => {
-
-            document
-                .querySelectorAll(".scoretab")
-                .forEach(t =>
-                    t.classList.remove("active")
-                );
-
-            tab.classList.add("active");
-
-            const mode =
-                tab.dataset.mode;
-
-            document.getElementById(
-                "thptMode"
-            ).style.display =
-                mode === "thpt"
-                    ? "block"
-                    : "none";
-
-            document.getElementById(
-                "hocbaMode"
-            ).style.display =
-                mode === "hocba"
-                    ? "block"
-                    : "none";
+document.querySelectorAll(".scoretab").forEach(tab => {
+    tab.addEventListener("click", () => {
+        document.querySelectorAll(".scoretab").forEach(item => {
+            item.classList.remove("active");
         });
+
+        tab.classList.add("active");
+
+        const mode = tab.dataset.mode;
+        const thptMode = document.getElementById("thptMode");
+        const hocbaMode = document.getElementById("hocbaMode");
+
+        if (thptMode) {
+            thptMode.style.display = mode === "thpt" ? "block" : "none";
+        }
+
+        if (hocbaMode) {
+            hocbaMode.style.display = mode === "hocba" ? "block" : "none";
+        }
     });
+});
 
 
 /* =========================
    TÍNH ĐIỂM THPT
 ========================= */
 
-document
-    .getElementById("calc")
-    .addEventListener("click", () => {
+const calcButton = document.getElementById("calc");
 
-        const a =
-            Number(document.getElementById("s1").value) || 0;
+if (calcButton) {
+    calcButton.addEventListener("click", () => {
+        const a = Number(document.getElementById("s1")?.value) || 0;
+        const b = Number(document.getElementById("s2")?.value) || 0;
+        const c = Number(document.getElementById("s3")?.value) || 0;
 
-        const b =
-            Number(document.getElementById("s2").value) || 0;
-
-        const c =
-            Number(document.getElementById("s3").value) || 0;
-
-        const region =
-            Number(document.getElementById("region").value);
-
-        const bonus =
-            Number(document.getElementById("bonus").value) || 0;
-
-        const block =
-            document.getElementById("block").value;
+        const region = Number(document.getElementById("region")?.value) || 0;
+        const bonus = Number(document.getElementById("bonus")?.value) || 0;
+        const block = document.getElementById("block")?.value || "";
 
         const base = a + b + c;
+        const total = base + region + bonus;
 
-        const total =
-            base + region + bonus;
+        const result = document.getElementById("scoreResult");
 
-        document.getElementById(
-            "scoreResult"
-        ).textContent =
-
-            `Khối ${block} • 3 môn: ${base.toFixed(2)}
-            • KV: +${region.toFixed(2)}
-            • Ưu tiên: +${bonus.toFixed(2)}
-            → Tổng: ${total.toFixed(2)} / 30`;
+        if (result) {
+            result.textContent =
+                `Khối ${block} • 3 môn: ${base.toFixed(2)} ` +
+                `• KV: +${region.toFixed(2)} ` +
+                `• Ưu tiên: +${bonus.toFixed(2)} ` +
+                `→ Tổng: ${total.toFixed(2)} / 30`;
+        }
     });
+}
 
 
 /* =========================
    TÍNH HỌC BẠ
 ========================= */
 
-document
-    .getElementById("calcHb")
-    .addEventListener("click", () => {
+const calcHbButton = document.getElementById("calcHb");
 
-        const values = [
+if (calcHbButton) {
+    calcHbButton.addEventListener("click", () => {
+        const ids = [
+            "hbToan10", "hbToan11", "hbToan12",
+            "hbVan10", "hbVan11", "hbVan12",
+            "hbAnh10", "hbAnh11", "hbAnh12",
+            "hbLy10", "hbLy11", "hbLy12",
+            "hbHoa10", "hbHoa11", "hbHoa12"
+        ];
 
-            "hbToan10",
-            "hbToan11",
-            "hbToan12",
-
-            "hbVan10",
-            "hbVan11",
-            "hbVan12",
-
-            "hbAnh10",
-            "hbAnh11",
-            "hbAnh12",
-
-            "hbLy10",
-            "hbLy11",
-            "hbLy12",
-
-            "hbHoa10",
-            "hbHoa11",
-            "hbHoa12"
-
-        ].map(id =>
-            Number(document.getElementById(id).value) || 0
+        const values = ids.map(id =>
+            Number(document.getElementById(id)?.value) || 0
         );
 
-        const filled =
-            values.filter(value => value > 0);
+        const filled = values.filter(value => value > 0);
+        const result = document.getElementById("hbResult");
+
+        if (!result) return;
 
         if (!filled.length) {
-
-            document.getElementById(
-                "hbResult"
-            ).textContent =
-                "Hãy nhập điểm học bạ trước.";
-
+            result.textContent = "Hãy nhập điểm học bạ trước.";
             return;
         }
 
-        const average =
-            filled.reduce(
-                (sum,value) => sum + value,
-                0
-            ) / filled.length;
+        const average = filled.reduce((sum, value) => sum + value, 0)
+            / filled.length;
 
-        const region =
-            Number(
-                document.getElementById(
-                    "hbRegion"
-                ).value
-            );
+        const region = Number(
+            document.getElementById("hbRegion")?.value
+        ) || 0;
 
-        const bonus =
-            Number(
-                document.getElementById(
-                    "hbBonus"
-                ).value
-            ) || 0;
+        const bonus = Number(
+            document.getElementById("hbBonus")?.value
+        ) || 0;
 
-        const total =
-            average * 3 + region + bonus;
+        const total = average * 3 + region + bonus;
 
-        document.getElementById(
-            "hbResult"
-        ).textContent =
-
-            `Điểm trung bình: ${average.toFixed(2)}
-            • Ưu tiên: +${(region + bonus).toFixed(2)}
-            → Tổng tham khảo: ${total.toFixed(2)} / 30`;
+        result.textContent =
+            `Điểm trung bình: ${average.toFixed(2)} ` +
+            `• Ưu tiên: +${(region + bonus).toFixed(2)} ` +
+            `→ Tổng tham khảo: ${total.toFixed(2)} / 30`;
     });
+}
 
 
 /* =========================
    DỮ LIỆU ĐIỂM CHUẨN
+   ĐIỂM DƯỚI ĐÂY LÀ DỮ LIỆU MẪU
 ========================= */
 
 const cutoffData = {
-
     vnu: [
-
-        ["Công nghệ thông tin","A00, A01, D01","26.10"],
-
-        ["FinTech / Công nghệ tài chính",
-         "A00, A01, D01","25.10"],
-
-        ["Quản trị kinh doanh",
-         "A00, A01, D01","24.50"],
-
-        ["Tài chính - Ngân hàng",
-         "A00, A01, D01","25.20"],
-
-        ["Kinh tế",
-         "A00, A01, D01","24.80"]
-
+        ["Công nghệ thông tin", "A00, A01, D01", "26.10"],
+        ["FinTech / Công nghệ tài chính", "A00, A01, D01", "25.10"],
+        ["Quản trị kinh doanh", "A00, A01, D01", "24.50"],
+        ["Tài chính - Ngân hàng", "A00, A01, D01", "25.20"],
+        ["Kinh tế", "A00, A01, D01", "24.80"]
     ],
 
     neu: [
-
-        ["Công nghệ thông tin",
-         "A00, A01, D01","27.40"],
-
-        ["Quản trị kinh doanh",
-         "A00, A01, D01","27.10"],
-
-        ["Tài chính - Ngân hàng",
-         "A00, A01, D01","27.30"],
-
-        ["Kinh tế quốc tế",
-         "A01, D01","27.60"],
-
-        ["Marketing",
-         "A01, D01","27.20"]
-
+        ["Công nghệ thông tin", "A00, A01, D01", "27.40"],
+        ["Quản trị kinh doanh", "A00, A01, D01", "27.10"],
+        ["Tài chính - Ngân hàng", "A00, A01, D01", "27.30"],
+        ["Kinh tế quốc tế", "A01, D01", "27.60"],
+        ["Marketing", "A01, D01", "27.20"]
     ],
 
     hust: [
-
-        ["Công nghệ thông tin",
-         "A00, A01","27.20"],
-
-        ["Khoa học máy tính",
-         "A00, A01","28.00"],
-
-        ["Kỹ thuật điện",
-         "A00, A01","26.40"],
-
-        ["Cơ điện tử",
-         "A00, A01","26.90"],
-
-        ["Quản trị kinh doanh",
-         "A00, A01","25.40"]
-
+        ["Công nghệ thông tin", "A00, A01", "27.20"],
+        ["Khoa học máy tính", "A00, A01", "28.00"],
+        ["Kỹ thuật điện", "A00, A01", "26.40"],
+        ["Cơ điện tử", "A00, A01", "26.90"],
+        ["Quản trị kinh doanh", "A00, A01", "25.40"]
     ],
 
     tm: [
-
-        ["Công nghệ thông tin",
-         "A00, A01","27.00"],
-
-        ["Quản trị kinh doanh",
-         "A00, A01","26.20"],
-
-        ["Tài chính - Ngân hàng",
-         "A00, A01","26.50"],
-
-        ["Marketing",
-         "A00, A01","26.30"],
-
-        ["Kinh doanh quốc tế",
-         "A00, A01","26.80"]
-
+        ["Công nghệ thông tin", "A00, A01", "27.00"],
+        ["Quản trị kinh doanh", "A00, A01", "26.20"],
+        ["Tài chính - Ngân hàng", "A00, A01", "26.50"],
+        ["Marketing", "A00, A01", "26.30"],
+        ["Kinh doanh quốc tế", "A00, A01", "26.80"]
     ],
 
     ftu: [
-
-        ["Kinh tế đối ngoại — CT tiên tiến",
-         "A00, A01, D01, D07","29.70"],
-
-        ["Kinh doanh quốc tế và Phân tích dữ liệu kinh doanh",
-         "A01, D01, D07","29.50"],
-
-        ["Logistics toàn cầu và đổi mới chuỗi cung ứng",
-         "A00, A01, D01, D07","28.70"],
-
-        ["Kinh tế quốc tế — CLC",
-         "A01, D01, D07","28.00"],
-
-        ["Kinh doanh quốc tế — CLC",
-         "A01, D01, D07","28.75"],
-
-        ["Kinh doanh số toàn cầu",
-         "A00, A01, D01, D07","27.90"],
-
-        ["Kinh doanh sáng tạo và Công nghiệp văn hóa",
-         "A00, A01, D01, D07","25.00"],
-
-        ["Quản trị kinh doanh — CT tiên tiến",
-         "A01, D01, D07","26.75"],
-
-        ["Thương mại số thông minh và đổi mới kinh doanh",
-         "A01, D01, D07","27.20"],
-
-        ["Tài chính - Ngân hàng — CT tiên tiến",
-         "A01, D01, D07","28.70"],
-
-        ["Tài chính - Ngân hàng — CLC",
-         "A01, D01, D07","27.00"],
-
-        ["Kế toán - Kiểm toán — CT tiên tiến",
-         "A00, A01, D01, D07","27.10"],
-
-        ["Luật thương mại quốc tế — CT tiên tiến",
-         "A00, A01, D01, D07","25.00"],
-
-        ["Quản trị khách sạn",
-         "A00, A01, D01, D07","25.00"],
-
-        ["Khoa học máy tính và dữ liệu trong kinh tế và kinh doanh",
-         "A00, A01, D01, D07","34.66"],
-
-        ["Tiếng Anh thương mại",
-         "D01","33.88"],
-
-        ["Tiếng Trung thương mại",
-         "D01, D04","36.00"]
-
+        ["Kinh tế đối ngoại — CT tiên tiến", "A00, A01, D01, D07", "29.70"],
+        ["Kinh doanh quốc tế và Phân tích dữ liệu kinh doanh", "A01, D01, D07", "29.50"],
+        ["Logistics toàn cầu và đổi mới chuỗi cung ứng", "A00, A01, D01, D07", "28.70"],
+        ["Kinh tế quốc tế — CLC", "A01, D01, D07", "28.00"],
+        ["Kinh doanh quốc tế — CLC", "A01, D01, D07", "28.75"],
+        ["Kinh doanh số toàn cầu", "A00, A01, D01, D07", "27.90"],
+        ["Kinh doanh sáng tạo và Công nghiệp văn hóa", "A00, A01, D01, D07", "25.00"],
+        ["Quản trị kinh doanh — CT tiên tiến", "A01, D01, D07", "26.75"],
+        ["Thương mại số thông minh và đổi mới kinh doanh", "A01, D01, D07", "27.20"],
+        ["Tài chính - Ngân hàng — CT tiên tiến", "A01, D01, D07", "28.70"],
+        ["Tài chính - Ngân hàng — CLC", "A01, D01, D07", "27.00"],
+        ["Kế toán - Kiểm toán — CT tiên tiến", "A00, A01, D01, D07", "27.10"],
+        ["Luật thương mại quốc tế — CT tiên tiến", "A00, A01, D01, D07", "25.00"],
+        ["Quản trị khách sạn", "A00, A01, D01, D07", "25.00"],
+        ["Khoa học máy tính và dữ liệu trong kinh tế và kinh doanh", "A00, A01, D01, D07", "34.66"],
+        ["Tiếng Anh thương mại", "D01", "33.88"],
+        ["Tiếng Trung thương mại", "D01, D04", "36.00"]
     ]
-
 };
 
-
 const schoolNames = {
-
     vnu: "ĐHQG Hà Nội",
-
     neu: "ĐH Kinh tế Quốc dân",
-
     hust: "ĐH Bách khoa Hà Nội",
-
     tm: "ĐH Thương mại",
-
     ftu: "ĐH Ngoại thương — Cơ sở phía Bắc"
-
 };
 
 
 /* =========================
-   HIỂN THỊ ĐIỂM CHUẨN
+   TRA CỨU ĐIỂM CHUẨN
 ========================= */
-
-
-/* ===== TRA CỨU ĐIỂM CHUẨN ===== */
 
 const schoolSearch = document.getElementById("schoolSearch");
 const schoolInput = document.getElementById("school");
 const schoolHint = document.getElementById("schoolHint");
+const schoolSuggestions = document.getElementById("schoolSuggestions");
 const cutoffSearch = document.getElementById("cutoffSearch");
 const cutoffResult = document.getElementById("cutoffResult");
 
-const schoolAliases = {
-    "đhqg hà nội": "vnu",
-    "đại học quốc gia hà nội": "vnu",
-    "vnu": "vnu",
-
-    "đh kinh tế quốc dân": "neu",
-    "đại học kinh tế quốc dân": "neu",
-    "neu": "neu",
-
-    "đh bách khoa hà nội": "hust",
-    "đại học bách khoa hà nội": "hust",
-    "hust": "hust",
-
-    "đh thương mại": "tm",
-    "đại học thương mại": "tm",
-    "tm": "tm",
-
-    "đh ngoại thương — cơ sở phía bắc": "ftu",
-    "đh ngoại thương": "ftu",
-    "đại học ngoại thương": "ftu",
-    "ftu": "ftu"
-};
-
 function normalizeText(value) {
     return String(value || "")
-        .normalize("NFC")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
         .trim()
-        .toLocaleLowerCase("vi");
+        .toLowerCase();
 }
 
-function resolveSchool(value) {
-    return schoolAliases[normalizeText(value)] || "";
+const availableSchools = Object.keys(cutoffData).map(key => ({
+    key,
+    name: schoolNames[key] || key
+}));
+
+function hideSchoolSuggestions() {
+    if (schoolSuggestions) {
+        schoolSuggestions.hidden = true;
+    }
+}
+
+function renderSchoolSuggestions() {
+    if (!schoolSearch || !schoolSuggestions) return;
+
+    const query = normalizeText(schoolSearch.value);
+    schoolSuggestions.replaceChildren();
+
+    if (!query) {
+        hideSchoolSuggestions();
+        return;
+    }
+
+    const matches = availableSchools
+        .filter(item =>
+            normalizeText(item.name).includes(query) ||
+            normalizeText(item.key).includes(query)
+        )
+        .slice(0, 8);
+
+    if (!matches.length) {
+        const empty = document.createElement("div");
+        empty.className = "school-no-result";
+        empty.textContent = "Chưa tìm thấy trường phù hợp.";
+        schoolSuggestions.appendChild(empty);
+        schoolSuggestions.hidden = false;
+        return;
+    }
+
+    matches.forEach(item => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "school-suggestion";
+        button.textContent = item.name;
+
+        const detail = document.createElement("small");
+        detail.textContent = `${(cutoffData[item.key] || []).length} ngành trong dữ liệu`;
+        button.appendChild(detail);
+
+        button.addEventListener("click", () => {
+            if (schoolInput) schoolInput.value = item.key;
+            schoolSearch.value = item.name;
+
+            if (schoolHint) {
+                schoolHint.textContent = "Đang chọn: " + item.name;
+            }
+
+            hideSchoolSuggestions();
+            renderCutoff();
+        });
+
+        schoolSuggestions.appendChild(button);
+    });
+
+    schoolSuggestions.hidden = false;
 }
 
 function renderCutoff() {
-    const school = schoolInput.value;
-    const search = normalizeText(cutoffSearch.value);
+    if (!cutoffResult || !schoolInput) return;
+
+    const school = schoolInput.value || "vnu";
+    const search = normalizeText(cutoffSearch?.value);
     const data = cutoffData[school] || [];
 
     const filtered = data.filter(row =>
@@ -560,16 +424,16 @@ function renderCutoff() {
     count.className = "cutoff-count";
     count.textContent = `Tìm thấy ${filtered.length} ngành`;
 
-    const tableWrap = document.createElement("div");
-    tableWrap.className = "cutoff-table-wrap";
-
-    if (filtered.length === 0) {
+    if (!filtered.length) {
         const empty = document.createElement("p");
         empty.className = "cutoff-empty";
         empty.textContent = "Không tìm thấy ngành phù hợp.";
         cutoffResult.replaceChildren(heading, count, empty);
         return;
     }
+
+    const wrap = document.createElement("div");
+    wrap.className = "cutoff-table-wrap";
 
     const table = document.createElement("table");
     table.className = "cutoff-table";
@@ -579,8 +443,8 @@ function renderCutoff() {
 
     ["STT", "Tên ngành", "Tổ hợp", "Điểm"].forEach(label => {
         const th = document.createElement("th");
-        th.scope = "col";
         th.textContent = label;
+        th.scope = "col";
         headerRow.appendChild(th);
     });
 
@@ -612,41 +476,67 @@ function renderCutoff() {
     });
 
     table.append(thead, tbody);
-    tableWrap.appendChild(table);
-    cutoffResult.replaceChildren(heading, count, tableWrap);
+    wrap.appendChild(table);
+    cutoffResult.replaceChildren(heading, count, wrap);
 }
 
-function chooseSchool() {
-    const key = resolveSchool(schoolSearch.value);
+if (schoolSearch) {
+    schoolSearch.addEventListener("input", renderSchoolSuggestions);
 
-    if (!key) {
-        schoolHint.textContent =
-            "Hãy chọn một trường có trong danh sách gợi ý.";
-        return;
-    }
+    schoolSearch.addEventListener("focus", () => {
+        if (schoolSearch.value.trim()) {
+            renderSchoolSuggestions();
+        }
+    });
 
-    schoolInput.value = key;
-    schoolSearch.value = schoolNames[key];
-    schoolHint.textContent = "Đang chọn: " + schoolNames[key];
+    schoolSearch.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            hideSchoolSuggestions();
+        }
 
-    renderCutoff();
+        if (event.key === "Enter" && schoolSuggestions && !schoolSuggestions.hidden) {
+            const first = schoolSuggestions.querySelector("button");
+
+            if (first) {
+                event.preventDefault();
+                first.click();
+            }
+        }
+    });
 }
 
-schoolSearch.addEventListener("change", chooseSchool);
-
-schoolSearch.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        chooseSchool();
+document.addEventListener("click", event => {
+    if (
+        !event.target.closest(".school-search-box") &&
+        !event.target.closest("#schoolSuggestions")
+    ) {
+        hideSchoolSuggestions();
     }
 });
 
-cutoffSearch.addEventListener("input", renderCutoff);
+const lookupCutoff = document.getElementById("lookupCutoff");
 
-document.getElementById("lookupCutoff").addEventListener("click", renderCutoff);
+if (lookupCutoff) {
+    lookupCutoff.addEventListener("click", renderCutoff);
+}
 
-/* Hiển thị trường mặc định khi mở mục tra cứu */
-schoolSearch.value = schoolNames[schoolInput.value] || schoolNames.vnu;
+if (cutoffSearch) {
+    cutoffSearch.addEventListener("input", renderCutoff);
+}
+
+if (schoolInput) {
+    schoolInput.value = schoolInput.value || "vnu";
+}
+
+if (schoolSearch && schoolInput) {
+    schoolSearch.value = schoolNames[schoolInput.value] || schoolNames.vnu;
+}
+
+if (schoolHint && schoolInput) {
+    schoolHint.textContent =
+        "Đang chọn: " + (schoolNames[schoolInput.value] || schoolNames.vnu);
+}
+
 renderCutoff();
 
 
@@ -654,53 +544,27 @@ renderCutoff();
    GỢI Ý NGÀNH
 ========================= */
 
-document
-    .getElementById("suggest")
-    .addEventListener("click", () => {
+const suggestButton = document.getElementById("suggest");
 
-        const interest =
-            document.getElementById(
-                "interest"
-            ).value;
-
+if (suggestButton) {
+    suggestButton.addEventListener("click", () => {
+        const interest = document.getElementById("interest")?.value || "";
         let result = "";
 
-        if (
-            interest.includes("Công nghệ")
-        ) {
-
-            result =
-                "Gợi ý: Công nghệ thông tin, Khoa học máy tính, FinTech.";
-
+        if (interest.includes("Công nghệ")) {
+            result = "Gợi ý: Công nghệ thông tin, Khoa học máy tính, FinTech.";
+        } else if (interest.includes("tài chính")) {
+            result = "Gợi ý: FinTech, Tài chính - Ngân hàng, Kinh tế.";
+        } else if (interest.includes("Kỹ thuật")) {
+            result = "Gợi ý: Kỹ thuật điện, Cơ khí, Tự động hóa.";
+        } else {
+            result = "Gợi ý: Marketing, Truyền thông, Quản trị kinh doanh.";
         }
 
-        else if (
-            interest.includes("tài chính")
-        ) {
+        const majorResult = document.getElementById("majorResult");
 
-            result =
-                "Gợi ý: FinTech, Tài chính - Ngân hàng, Kinh tế.";
-
+        if (majorResult) {
+            majorResult.textContent = result;
         }
-
-        else if (
-            interest.includes("Kỹ thuật")
-        ) {
-
-            result =
-                "Gợi ý: Kỹ thuật điện, Cơ khí, Tự động hóa.";
-
-        }
-
-        else {
-
-            result =
-                "Gợi ý: Marketing, Truyền thông, Quản trị kinh doanh.";
-
-        }
-
-        document.getElementById(
-            "majorResult"
-        ).textContent = result;
-
     });
+}
